@@ -9,4 +9,34 @@ https://www.cubemars.com/images/file/20240611/1718085712815162.pdf
 
 https://tmotorcancontrol.readthedocs.io/_/downloads/en/latest/pdf/
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  RUN THIS TO MAKE CAN0 BE UP : 
+
+
+sudo ip link set can0 up type can bitrate 1000000
+sudo ifconfig can0 txqueuelen 65536
+sudo ifconfig can0 up
+
+sudo modprobe can
+sudo modprobe can_raw
+sudo modprobe can_dev
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ID 0x2968 HEX, (10600 decimal)  = 104 MOTOR ID
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+record CANDUMP FOR 5 seconds: 
+
+timeout 5 sudo candump -t a can0 -l > motor_movement.log
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+WHAT IS THE MOTOR ID ? 
+with TMotorManager_servo_can(motor_type='AK80-9', motor_ID=104) as dev:
+
+SOLUTION ? MOTOR _ id = 104
+
+
+
 
