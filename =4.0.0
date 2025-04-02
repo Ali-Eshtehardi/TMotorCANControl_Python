@@ -1,0 +1,17 @@
+Looking in indexes: https://pypi.org/simple, https://www.piwheels.org/simple
+Collecting python-can
+  Downloading https://www.piwheels.org/simple/python-can/python_can-4.5.0-py3-none-any.whl (268 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 269.0/269.0 kB 708.4 kB/s eta 0:00:00
+Collecting wrapt~=1.10
+  Downloading wrapt-1.17.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (83 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.8/83.8 kB 1.8 MB/s eta 0:00:00
+Collecting packaging>=23.1
+  Using cached https://www.piwheels.org/simple/packaging/packaging-24.2-py3-none-any.whl (65 kB)
+Collecting typing_extensions>=3.10.0.0
+  Downloading https://www.piwheels.org/simple/typing-extensions/typing_extensions-4.13.0-py3-none-any.whl (45 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.7/45.7 kB 2.1 MB/s eta 0:00:00
+Collecting msgpack~=1.1.0
+  Downloading msgpack-1.1.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (396 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 396.1/396.1 kB 3.1 MB/s eta 0:00:00
+Installing collected packages: wrapt, typing_extensions, packaging, msgpack, python-can
+Successfully installed msgpack-1.1.0 packaging-24.2 python-can-4.5.0 typing_extensions-4.13.0 wrapt-1.17.2
