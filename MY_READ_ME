@@ -31,6 +31,8 @@ ID 0x2968 HEX, (10600 decimal)  = 104 MOTOR ID
 record CANDUMP FOR 5 seconds: 
 
 timeout 5 sudo candump -t a can0 -l > motor_movement.log
+
+WHY ? TO GET MOTOR ID FROM CANDUMP, DIFFERENT FOR EVERYONE 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 WHAT IS THE MOTOR ID ? 
 with TMotorManager_servo_can(motor_type='AK80-9', motor_ID=104) as dev:
