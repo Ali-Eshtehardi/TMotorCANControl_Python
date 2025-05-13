@@ -1,19 +1,19 @@
-from NeuroLocoMiddleware.SoftRealtimeLoop import SoftRealtimeLoop
-from sys import path
-path.append("/home/pi/TMotorCANControl/src/")
+from NeuroLocoMiddleware.SoftRealtimeLoop import SoftRealtimeLoop   #Imports a SoftRealtimeLoop class for timing control
+from sys import path #Adding the path to the system path for module import
+path.append("/home/pi/TMotorCANControl/src/")  #allows below import to work
 from TMotorCANControl.servo_can import TMotorManager_servo_can
-import time
-import threading
-import queue
-import math
-import numpy as np
+import time #Importing time for sleep functionality
+import threading #Importing threading for concurrent input handling
+import queue #Importing queue for thread-safe communication
+import math 
+import numpy as np #Importing numpy for numerical operations
 
 DEG_TO_RAD = math.pi / 180.0  
 RAD_TO_DEG = 180.0 / math.pi  
 FREE_DUTY_CYCLE = 0  # Zero duty cycle for minimum resistance
 POSITION_TOLERANCE = 1  # degrees
 
-def Questions(target_queue):
+def Questions(target_queue):   # is a thread, and works in the terminal
     while True:
         try:
             user_input = input("\n Enter Target Position in degrees - Press Z to cancel - ")
@@ -31,11 +31,11 @@ def Questions(target_queue):
                 print("Invalid target position. Please enter a number or 'Z' to cancel.")
 
 def main():
-    target = None
+    target = None   # these 2 are initialization of variable states
     motor_locked = False       
-    target_queue = queue.Queue()
-    input_thread = threading.Thread(target=Questions, args=(target_queue,), daemon=True)
-    input_thread.start()
+    target_queue = queue.Queue()  #creation of a queue for thread-safe communication
+    input_thread = threading.Thread(target=Questions, args=(target_queue,), daemon=True)   # this is the thread that will run the Questions function in the terminal
+    input_thread.start() #starts the above thread when u run the code
 
 
     max_velocity = 0.5  # rad/s
@@ -52,17 +52,18 @@ def main():
           
             print(f"Initial motor state: {dev}")
             
-            loop = SoftRealtimeLoop(dt=0.01, report=True, fade=0.0)
-            dev.enter_position_velocity_control()
+            loop = SoftRealtimeLoop(dt=0.01, report=True, fade=0.0)  # Creates a soft real-time loop with 10ms intervals , can also use time.sleep(0.01) instead of this
+            # loop.start()  # Starts the loop <- this is not needed, as the loop is started in the class itself , good because we need it to continously ask for input
+            dev.enter_position_velocity_control() # Puts the motor in position-velocity control mode
             
             for t in loop:             
                 
                 try:
-                    new_target = target_queue.get_nowait()
-                    if new_target == 'cancel':
+                    new_target = target_queue.get_nowait() #Checks for new target values in the queue without waiting
+                    if new_target == 'cancel': #If a 'cancel' message is received, it breaks out of the loop
                         break  
                     else:
-                        target = new_target
+                        target = new_target #If a new target is received, it updates the target and unlocks the motor
                         motor_locked = False 
                         print(f"\nNew target set: {target}°")
                         
@@ -71,9 +72,9 @@ def main():
                     pass
 
              
-                if target is not None and not motor_locked:
+                if target is not None and not motor_locked: #If there's a target and the motor isn't locked
                     
-                    target_rad = target * DEG_TO_RAD
+                    target_rad = target * DEG_TO_RAD  #Converts the target from degrees to radians
                     
                    ####################################################################################
                     scaling_factor = 1  
@@ -87,20 +88,20 @@ def main():
                     dev.update()
                     
                     
-                    current_pos = dev.position * RAD_TO_DEG
-                    angle_difference = abs(current_pos - target)
+                    current_pos = dev.position * RAD_TO_DEG #Updates the motor state
+                    angle_difference = abs(current_pos - target) # Calculates the difference between the current position and the target
                     
                     print(f"\rCurrent pos: {current_pos:.2f}°, Target: {target}°, Diff: {angle_difference:.2f}°", end='')
 
                    
-                    if angle_difference <= POSITION_TOLERANCE:
+                    if angle_difference <= POSITION_TOLERANCE: #If the motor reaches the target position within tolerance
                         print(f"\nTarget reached! Current position: {current_pos:.2f}°. Locking motor...")
-                        dev.enter_current_brake_control()
-                        dev.set_motor_current_qaxis_amps(50)  
+                        dev.enter_current_brake_control() # Switches to current brake control mode
+                        dev.set_motor_current_qaxis_amps(50)  # Sets a big current to hold the position
                         dev.update()
-                        motor_locked = True
+                        motor_locked = True #Sets the motor_locked flag
                         print("\nMotor LOCKED. Enter a new target position.\n")
-                elif motor_locked:
+                elif motor_locked: #If the motor is locked:
                     dev.update() 
                     current_pos = dev.position * RAD_TO_DEG
                     print(f"\rMotor LOCKED at {current_pos:.2f}°. Enter a new target position.", end='')
@@ -110,7 +111,7 @@ def main():
 
     except KeyboardInterrupt:
         print("\nProgram interrupted by user.")
-    finally:
+    finally:    #below code will run when the program ends, turns off all the inhibitors and returns to free mode
    
         if 'dev' in locals():
             dev.enter_duty_cycle_control()
